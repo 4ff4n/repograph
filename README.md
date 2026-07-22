@@ -88,13 +88,6 @@ repograph diff /path/to/your/repo --base HEAD~1 --head HEAD
 `graph.db` file — all three resolve to the same database.
 
 ---
-### Demo
-
-![UIDemo](./media/3.png)
-![UIDemoGraph](./media/4.png)
-![Scan](./1.png)
-![GitDiff](./2.png)
-
 
 ## Commands
 
@@ -278,6 +271,13 @@ examples/
 
 Each layer is independent on purpose — you can work on the scanner without
 touching the UI, and vice versa.
+
+### Demo
+
+![UIDemo](./media/3.png)
+![UIDemoGraph](./media/4.png)
+![Scan](./media/1.png)
+![GitDiff](./media/2.png)
 
 ## Honest limitations
 
