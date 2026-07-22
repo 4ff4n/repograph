@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "repograph"
+version = "0.1.0"
+description = "Semantic code graph + AI security review for Python repositories."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = [
+    "networkx>=3.0",
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+    "openai>=1.30",
+    "python-dotenv>=1.0",
+    "rich>=13.0",
+]
+
+[project.scripts]
+repograph = "repograph.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["repograph*"]
+
+[tool.setuptools.package-data]
+"repograph.server" = ["static/*.html"]

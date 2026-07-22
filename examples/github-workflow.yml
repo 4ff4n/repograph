@@ -1,0 +1,57 @@
+# RepoGraph — PR blast-radius report
+# Copy this file to .github/workflows/repograph.yml in your repository.
+#
+# On every pull request it diffs the code graph against the base branch and
+# posts (or updates) a comment with the downstream impact of the change.
+# Uncomment the --fail-risk flag to turn it into a merge gate.
+
+name: RepoGraph impact
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  impact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0            # full history so the base ref exists locally
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install RepoGraph
+        run: pip install git+https://github.com/4ff4n/repograph.git
+        # or, if this workflow lives inside the repograph repo itself:
+        # run: pip install .
+
+      - name: Compute blast radius
+        run: |
+          repograph diff . \
+            --base "origin/${{ github.base_ref }}" \
+            --head HEAD \
+            --markdown impact.md
+          # --fail-risk 60          # uncomment to block risky merges
+
+      - name: Comment on the pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # update the existing RepoGraph comment if there is one, else create
+          existing=$(gh pr view ${{ github.event.pull_request.number }} \
+            --json comments \
+            --jq '.comments[] | select(.body | startswith("## RepoGraph impact report")) | .url' \
+            | head -1)
+          if [ -n "$existing" ]; then
+            gh pr comment ${{ github.event.pull_request.number }} \
+              --edit-last --body-file impact.md
+          else
+            gh pr comment ${{ github.event.pull_request.number }} \
+              --body-file impact.md
+          fi
