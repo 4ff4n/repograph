@@ -88,6 +88,13 @@ repograph diff /path/to/your/repo --base HEAD~1 --head HEAD
 `graph.db` file — all three resolve to the same database.
 
 ---
+### Demo
+
+![UIDemo](./media/3.png)
+![UIDemoGraph](./media/4.png)
+![Scan](./1.png)
+![GitDiff](./2.png)
+
 
 ## Commands
 
